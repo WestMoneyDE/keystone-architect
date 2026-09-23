@@ -9,7 +9,8 @@ import { useState } from "react";
 import { Download, Link2, Check } from "lucide-react";
 import { GlassCard } from "@/components/ui/GlassCard";
 import { Button } from "@/components/ui/Button";
-import { Avatar } from "@/components/ui/Avatar";
+import { KeystoneMark } from "@/components/brand/KeystoneMark";
+import { AUTHOR_CREDIT } from "@/lib/brand/credit";
 
 export interface CertificateViewProps {
   certificateId: string;
@@ -53,14 +54,15 @@ export function CertificateView({
       {/* On-screen certificate preview — visually mirrors CertificateDocument.tsx's PDF layout. */}
       <GlassCard className="relative overflow-hidden rounded-3xl border-2 border-accent/40 bg-[#fdfcf8] p-2">
         <div className="rounded-2xl border border-[#c7c2b8] p-10 text-center">
+          <div className="mb-4 flex items-center justify-center gap-2.5">
+            <KeystoneMark size={40} className="rounded-[10px]" />
+            <span className="text-sm font-medium text-[#374151]">{AUTHOR_CREDIT}</span>
+          </div>
           <p className="mb-2 text-xs font-semibold uppercase tracking-[0.3em] text-accent">Keystone Certification</p>
           <h1 className="mb-6 font-serif text-3xl font-bold text-[#16181d]">Certificate of Completion</h1>
 
           <p className="mb-2 text-sm text-[#4b5563]">This certifies that</p>
-          <div className="mb-2 flex items-center justify-center gap-3">
-            <Avatar name={recipientName} size={44} className="rounded-full" />
-            <span className="font-serif text-2xl font-bold text-[#16181d]">{recipientName}</span>
-          </div>
+          <p className="mb-2 font-serif text-2xl font-bold text-[#16181d]">{recipientName}</p>
           <p className="mb-1 text-sm text-[#4b5563]">
             has successfully completed the Keystone certification exam for the role of
           </p>

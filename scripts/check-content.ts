@@ -114,6 +114,8 @@ const RULES: Rule[] = [
 ];
 
 const SKIP_FILES = new Set([SELF, "package-lock.json", "src-tauri/Cargo.lock"]);
+// The author credit on certificates is intentional; only this file may name the author.
+const AUTHOR_CREDIT_FILES = new Set(["lib/brand/credit.ts"]);
 const SKIP_DIRS = ["node_modules/", ".next/", ".git/", "src-tauri/target/", "src-tauri/gen/", "storage/"];
 const BINARY_EXT = new Set([
   ".png", ".jpg", ".jpeg", ".gif", ".webp", ".ico", ".icns", ".pdf", ".woff", ".woff2", ".ttf", ".otf", ".zip", ".exe", ".msi",
@@ -158,7 +160,7 @@ function main() {
     const text = fs.readFileSync(path.join(ROOT, file), "utf8");
     const lines = text.split(/\r?\n/);
     lines.forEach((line, i) => {
-      for (const t of privateTokensIn(line)) {
+      for (const t of AUTHOR_CREDIT_FILES.has(file) ? [] : privateTokensIn(line)) {
         hits.push(`${file}:${i + 1}: [private term] token of length ${t.length} (see PRIVATE_TOKEN_HASHES)`);
       }
       for (const rule of RULES) {

@@ -13,7 +13,6 @@ import sharp from "sharp";
 import { db } from "@/lib/db";
 import { CertificateDocument } from "./CertificateDocument";
 import { buildSocialCardSvg } from "./socialCard";
-import { blobatarForPdf } from "./blobatarSvg";
 
 // Not under /public — served exclusively through app/api/certificates/[id]/
 // {pdf,social-card}/route.ts rather than as raw static files, per the
@@ -64,8 +63,6 @@ export async function generateCertificate(attemptId: string): Promise<{ certific
   const roleLabel = attempt.test.role.label;
   const issuedAtDisplay = dateFormatter.format(issuedAt);
 
-  const avatar = blobatarForPdf(recipientName);
-
   await mkdir(STORAGE_DIR, { recursive: true });
 
   const pdfBuffer = await renderToBuffer(
@@ -76,7 +73,6 @@ export async function generateCertificate(attemptId: string): Promise<{ certific
       issuedAt: issuedAtDisplay,
       verificationHash,
       githubUrl: GITHUB_REPO_URL,
-      avatar,
     })
   );
 
@@ -85,7 +81,6 @@ export async function generateCertificate(attemptId: string): Promise<{ certific
     roleLabel,
     score,
     issuedAt: issuedAtDisplay,
-    avatar,
     githubUrl: GITHUB_REPO_URL,
   });
   const socialCardBuffer = await sharp(Buffer.from(socialCardSvg)).png().toBuffer();

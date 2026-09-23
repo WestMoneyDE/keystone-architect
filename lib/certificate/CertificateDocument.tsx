@@ -7,8 +7,9 @@
 // for a self-hosted, offline-friendly app than pulling a Google Font at
 // render time).
 
-import { Document, Page, View, Text, Svg, G, Path, Circle, StyleSheet, Link } from "@react-pdf/renderer";
-import type { ParsedBlobatar } from "./blobatarSvg";
+import { Document, Page, View, Text, Svg, Defs, LinearGradient, Stop, Rect, Path, StyleSheet, Link } from "@react-pdf/renderer";
+import { LOGO_COLORS, LOGO_SHAPES, LOGO_VIEWBOX } from "../brand/logo";
+import { AUTHOR_CREDIT } from "../brand/credit";
 
 const styles = StyleSheet.create({
   page: {
@@ -131,36 +132,19 @@ const styles = StyleSheet.create({
     fontSize: 9,
     color: "#4f46e5",
   },
-  fallbackAvatar: {
-    width: 56,
-    height: 56,
-    borderRadius: 28,
+  brandRow: {
     display: "flex",
+    flexDirection: "row",
     alignItems: "center",
-    justifyContent: "center",
+    gap: 10,
+    marginBottom: 16,
   },
-  fallbackAvatarText: {
-    fontFamily: "Times-Bold",
-    color: "#ffffff",
-    fontSize: 22,
+  brandCredit: {
+    fontSize: 11,
+    color: "#374151",
+    fontFamily: "Helvetica",
   },
 });
-
-/** Deterministic HSL-ish hex color from a name, used only for the
- * colored-initial fallback avatar (when blobatar SVG parsing fails). Mirrors
- * the "same seed -> same visual" property the real Blobatar guarantees,
- * scoped down to just a hue pick. */
-function fallbackColorFor(name: string): string {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) {
-    hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
-  }
-  const hue = hash % 360;
-  // Fixed, reasonably saturated/mid-lightness swatch list keyed by hue bucket
-  // — avoids needing an HSL->hex conversion helper for a one-off fallback.
-  const palette = ["#4f46e5", "#0ea5e9", "#16a34a", "#d97706", "#dc2626", "#7c3aed", "#0891b2", "#db2777"];
-  return palette[hue % palette.length];
-}
 
 interface CertificateDocumentProps {
   recipientName: string;
@@ -169,7 +153,6 @@ interface CertificateDocumentProps {
   issuedAt: string; // pre-formatted display date
   verificationHash: string;
   githubUrl: string;
-  avatar: ParsedBlobatar | null;
 }
 
 export function CertificateDocument({
@@ -179,7 +162,6 @@ export function CertificateDocument({
   issuedAt,
   verificationHash,
   githubUrl,
-  avatar,
 }: CertificateDocumentProps) {
   return (
     <Document title={`Keystone Certificate — ${roleLabel}`}>
@@ -187,32 +169,16 @@ export function CertificateDocument({
         <View style={styles.outerBorder} />
         <View style={styles.innerBorder} />
         <View style={styles.content}>
+          <View style={styles.brandRow}>
+            <KeystoneLogo size={40} />
+            <Text style={styles.brandCredit}>{AUTHOR_CREDIT}</Text>
+          </View>
           <Text style={styles.eyebrow}>Keystone Certification</Text>
           <Text style={styles.title}>Certificate of Completion</Text>
 
           <Text style={styles.lead}>This certifies that</Text>
 
           <View style={styles.recipientRow}>
-            {avatar ? (
-              <Svg width={40} height={40} viewBox={avatar.viewBox}>
-                {avatar.groups.map((g, gi) => (
-                  <G key={gi} fill={g.fill}>
-                    {g.circles.map((c, ci) => (
-                      <Circle key={`c${ci}`} cx={c.cx} cy={c.cy} r={c.r} />
-                    ))}
-                    {g.paths.map((p, pi) => (
-                      <Path key={`p${pi}`} d={p.d} />
-                    ))}
-                  </G>
-                ))}
-              </Svg>
-            ) : (
-              <View style={[styles.fallbackAvatar, { backgroundColor: fallbackColorFor(recipientName) }]}>
-                <Text style={styles.fallbackAvatarText}>
-                  {(recipientName.trim()[0] ?? "K").toUpperCase()}
-                </Text>
-              </View>
-            )}
             <Text style={styles.recipientName}>{recipientName}</Text>
           </View>
 
@@ -239,5 +205,26 @@ export function CertificateDocument({
         </View>
       </Page>
     </Document>
+  );
+}
+
+function KeystoneLogo({ size }: { size: number }) {
+  const sh = LOGO_SHAPES;
+  const c = LOGO_COLORS;
+  return (
+    <Svg width={size} height={size} viewBox={LOGO_VIEWBOX}>
+      <Defs>
+        <LinearGradient id="kslogo" x1="0" y1="0" x2="1" y2="1">
+          <Stop offset="0" stopColor={c.gradientFrom} />
+          <Stop offset="1" stopColor={c.gradientTo} />
+        </LinearGradient>
+      </Defs>
+      <Rect x={0} y={0} width={64} height={64} rx={sh.background.rx} fill="url(#kslogo)" />
+      <Path d={sh.archLeft} fill="none" stroke={c.stone} strokeWidth={sh.archStrokeWidth} />
+      <Path d={sh.archRight} fill="none" stroke={c.stone} strokeWidth={sh.archStrokeWidth} />
+      <Path d={sh.keystone} fill={c.keystone} />
+      <Path d={sh.book} fill="none" stroke={c.stone} strokeWidth={sh.bookStrokeWidth} strokeLinecap="round" strokeLinejoin="round" />
+      <Path d={sh.spark} fill={c.spark} />
+    </Svg>
   );
 }

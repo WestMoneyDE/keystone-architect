@@ -5,6 +5,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { ChevronLeft, ChevronRight, ExternalLink, FileText, Home, Layers, Loader2, Moon, Search, Settings, Sparkles, Sun } from "lucide-react";
 import { Avatar } from "@/components/ui/Avatar";
+import { KeystoneMark } from "@/components/brand/KeystoneMark";
 import { FloatingDock } from "@/components/dock/FloatingDock";
 import { CommandPalette } from "@/components/palette/CommandPalette";
 import { RoleArticlesPanel } from "@/components/roles/RoleArticlesPanel";
@@ -295,7 +296,12 @@ export function AppShell({
         className="relative flex h-full shrink-0 flex-col overflow-hidden border-r border-border bg-surface"
       >
         <div className="flex shrink-0 items-center justify-between gap-2 border-b border-border p-3">
-          {!collapsed && <span className="truncate text-sm font-semibold">Keystone</span>}
+          {!collapsed && (
+            <Link href="/" className="flex min-w-0 items-center gap-2.5" aria-label="Keystone home">
+              <KeystoneMark size={30} className="shrink-0 rounded-[8px] shadow-sm" />
+              <span className="truncate text-[15px] font-semibold tracking-tight">Keystone</span>
+            </Link>
+          )}
           <button
             type="button"
             onClick={() => {

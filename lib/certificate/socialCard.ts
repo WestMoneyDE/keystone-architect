@@ -3,9 +3,7 @@
 // social-card PNG for LinkedIn/Twitter").
 //
 // Approach: hand-roll a small SVG string (plain shapes + <text>, plus the
-// recipient's Blobatar re-embedded as its own raw <svg> groups — same
-// server-safe `blobatar()` generator used for the PDF, see blobatarSvg.ts)
-// and rasterize it to PNG with `sharp` (already a project dependency
+// Keystone logo from lib/brand/logo.ts) and rasterize it to PNG with `sharp` (already a project dependency
 // transitively available with prebuilt Windows/Linux/macOS binaries via
 // libvips, and the only new dependency this ticket adds). Chosen over
 // satori+resvg because sharp alone already covers "SVG string -> PNG
@@ -13,7 +11,8 @@
 // surface minimal per the ticket's instruction.
 
 import { escapeXml } from "./xml";
-import type { ParsedBlobatar } from "./blobatarSvg";
+import { logoSvgMarkup } from "../brand/logo";
+import { AUTHOR_CREDIT } from "../brand/credit";
 
 const WIDTH = 1200;
 const HEIGHT = 630;
@@ -23,41 +22,15 @@ export interface SocialCardInput {
   roleLabel: string;
   score: number;
   issuedAt: string; // pre-formatted display date
-  avatar: ParsedBlobatar | null;
   githubUrl: string;
 }
 
-function fallbackColorFor(name: string): string {
-  let hash = 0;
-  for (let i = 0; i < name.length; i++) hash = (hash * 31 + name.charCodeAt(i)) >>> 0;
-  const palette = ["#4f46e5", "#0ea5e9", "#16a34a", "#d97706", "#dc2626", "#7c3aed", "#0891b2", "#db2777"];
-  return palette[hash % palette.length];
-}
-
-function renderAvatarGroup(avatar: ParsedBlobatar, size: number): string {
-  const scale = size / 100; // avatar viewBox is always "0 0 100 100"
-  const groups = avatar.groups
-    .map((g) => {
-      const circles = g.circles.map((c) => `<circle cx="${c.cx}" cy="${c.cy}" r="${c.r}"/>`).join("");
-      const paths = g.paths.map((p) => `<path d="${p.d}"/>`).join("");
-      return `<g fill="${g.fill}">${circles}${paths}</g>`;
-    })
-    .join("");
-  return `<g transform="scale(${scale})">${groups}</g>`;
-}
-
 export function buildSocialCardSvg(input: SocialCardInput): string {
-  const { recipientName, roleLabel, score, issuedAt, avatar } = input;
-  const avatarSize = 88;
-  const avatarX = 96;
-  const avatarY = 236;
-
-  const avatarMarkup = avatar
-    ? `<clipPath id="avatarClip"><circle cx="${avatarX + avatarSize / 2}" cy="${avatarY + avatarSize / 2}" r="${avatarSize / 2}"/></clipPath>` +
-      `<g clip-path="url(#avatarClip)"><rect x="${avatarX}" y="${avatarY}" width="${avatarSize}" height="${avatarSize}" fill="#f3f4f6"/>` +
-      `<g transform="translate(${avatarX}, ${avatarY})">${renderAvatarGroup(avatar, avatarSize)}</g></g>`
-    : `<circle cx="${avatarX + avatarSize / 2}" cy="${avatarY + avatarSize / 2}" r="${avatarSize / 2}" fill="${fallbackColorFor(recipientName)}"/>` +
-      `<text x="${avatarX + avatarSize / 2}" y="${avatarY + avatarSize / 2 + 14}" font-size="34" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#ffffff" text-anchor="middle">${escapeXml((recipientName.trim()[0] ?? "K").toUpperCase())}</text>`;
+  const { recipientName, roleLabel, score, issuedAt } = input;
+  const logoSize = 96;
+  const logoX = WIDTH - 96 - logoSize;
+  const logoY = 72;
+  const logoMarkup = logoSvgMarkup(logoSize, "card").replace("<svg ", `<svg x=\"${logoX}\" y=\"${logoY}\" `);
 
   return `<svg xmlns="http://www.w3.org/2000/svg" width="${WIDTH}" height="${HEIGHT}" viewBox="0 0 ${WIDTH} ${HEIGHT}">
   <defs>
@@ -73,10 +46,11 @@ export function buildSocialCardSvg(input: SocialCardInput): string {
   <text x="96" y="120" font-size="20" letter-spacing="4" font-family="Georgia, 'Times New Roman', serif" fill="#4f46e5">KEYSTONE CERTIFICATION</text>
   <text x="96" y="180" font-size="46" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#16181d">Certificate of Completion</text>
 
-  ${avatarMarkup}
+  ${logoMarkup}
+  <text x="${logoX + logoSize}" y="${logoY + logoSize + 30}" font-size="16" font-family="Arial, sans-serif" fill="#374151" text-anchor="end">${escapeXml(AUTHOR_CREDIT)}</text>
 
-  <text x="${avatarX + avatarSize + 28}" y="${avatarY + 34}" font-size="30" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#16181d">${escapeXml(recipientName)}</text>
-  <text x="${avatarX + avatarSize + 28}" y="${avatarY + 68}" font-size="22" font-family="Georgia, 'Times New Roman', serif" fill="#4f46e5">${escapeXml(roleLabel)}</text>
+  <text x="96" y="270" font-size="30" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#16181d">${escapeXml(recipientName)}</text>
+  <text x="96" y="306" font-size="22" font-family="Georgia, 'Times New Roman', serif" fill="#4f46e5">${escapeXml(roleLabel)}</text>
 
   <text x="96" y="420" font-size="15" letter-spacing="1.5" font-family="Arial, sans-serif" fill="#9ca3af">SCORE</text>
   <text x="96" y="460" font-size="40" font-family="Georgia, 'Times New Roman', serif" font-weight="bold" fill="#16181d">${score.toFixed(1)}%</text>
