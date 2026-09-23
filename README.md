@@ -1,5 +1,7 @@
 # Keystone
 
+![Keystone home dashboard](docs/media/dashboard.png)
+
 **The knowledge base that holds your architecture career together.**
 
 A self-hosted platform for studying, practicing, and self-certifying across Enterprise / Solutions / Platform / Cloud / GenAI / MLOps architecture roles — built on a bundled 720-article Markdown knowledge base and running entirely on your own machine. An LLM is optional: reading, spaced repetition and self-assessed role tests work without one.
