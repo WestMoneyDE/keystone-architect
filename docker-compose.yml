@@ -1,0 +1,40 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: keystone-postgres
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: keystone
+      POSTGRES_PASSWORD: keystone
+      POSTGRES_DB: keystone
+    ports:
+      - "5432:5432"
+    volumes:
+      - keystone-postgres-data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U keystone -d keystone"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  # The Next.js app itself is not containerized yet — during development run
+  # it directly with `npm run dev` against the Postgres service above.
+  # A future ticket (desktop packaging, #12) wires this app service up for a
+  # fully self-contained `docker compose up -d` that also starts Keystone.
+  #
+  # app:
+  #   build: .
+  #   container_name: keystone-app
+  #   restart: unless-stopped
+  #   depends_on:
+  #     postgres:
+  #       condition: service_healthy
+  #   ports:
+  #     - "3000:3000"
+  #   environment:
+  #     DATABASE_URL: postgresql://keystone:keystone@postgres:5432/keystone?schema=public
+  #   env_file:
+  #     - .env
+
+volumes:
+  keystone-postgres-data:

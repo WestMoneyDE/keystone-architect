@@ -1,0 +1,71 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+!.env.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# prisma
+/prisma/generated/
+*.db
+*.db-journal
+
+# generated certificates / social cards (ticket 9) — served through
+# app/api/certificates/[id]/{pdf,social-card}/route.ts, never exposed as
+# raw static files under /public.
+/public/certificates/
+/storage/certificates/
+
+# editors / OS
+.vscode/
+.idea/
+Thumbs.db
+
+# Tauri desktop shell (ticket 13) — Rust build output + generated
+# permission/capability schemas, same idea as /node_modules or /.next:
+# reproducible from source, shouldn't be committed.
+/src-tauri/target/
+/src-tauri/gen/
+
+# local runtime data (encryption key fallback, generated certificates, …)
+/storage/
+
+# agent / tooling scratch output
+/artifacts/
+/runs/

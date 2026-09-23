@@ -1,0 +1,381 @@
+// Keystone — Prisma schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Knowledge base content
+// ---------------------------------------------------------------------------
+
+model Domain {
+  id    String @id // natural key from manifest-720.json, e.g. "00"
+  slug  String @unique
+  title String
+  wave  Int
+
+  articles  Article[]
+  newsItems NewsItem[]
+}
+
+model Article {
+  id         String @id // natural key, e.g. "KB-0001"
+  title      String
+  h1         String
+  ziel       String @db.Text
+
+  domainId    String
+  domain      Domain @relation(fields: [domainId], references: [id])
+  domainSlug  String
+  domainTitle String
+
+  sequence     Int
+  documentType String
+  primaryRoles String[]
+  requires     String[]
+  related      String[]
+  competencies Json
+
+  body String @db.Text
+  path String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  interviewQuestions InterviewQuestion[]
+  checklistItems      ChecklistItem[]
+  highlights          Highlight[]
+  conversations       Conversation[]
+  testQuestionPools   TestQuestionPool[]
+  bookmarks           Bookmark[]
+  views               ArticleView[]
+
+  @@index([domainId])
+}
+
+model InterviewQuestion {
+  id              String  @id @default(cuid())
+  articleId       String
+  article         Article @relation(fields: [articleId], references: [id])
+  position        Int
+  question        String  @db.Text
+  referenceAnswer String  @db.Text
+
+  testAttemptAnswers TestAttemptAnswer[]
+  srsStates          SrsState[]
+
+  @@unique([articleId, position])
+}
+
+model ChecklistItem {
+  id        String  @id @default(cuid())
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id])
+  position  Int
+  text      String  @db.Text
+
+  @@unique([articleId, position])
+}
+
+// ---------------------------------------------------------------------------
+// Users / auth (real models exist for future-proofing; v1 ships one default
+// implicit local user and no login UI)
+// ---------------------------------------------------------------------------
+
+model User {
+  id           String   @id @default(cuid())
+  username     String   @unique
+  displayName  String? // shown in UI + seeds the Blobatar avatar; set during onboarding
+  passwordHash String?
+  isDefault    Boolean  @default(false)
+  createdAt    DateTime @default(now())
+
+  sessions           Session[]
+  conversations      Conversation[]
+  highlights         Highlight[]
+  bookmarks          Bookmark[]
+  testAttempts       TestAttempt[]
+  certificates       Certificate[]
+  srsStates          SrsState[]
+  providerConfigs    ProviderConfig[]
+  roleSelections     UserRoleSelection[]
+  featureFlags       FeatureFlags?
+  articleViews       ArticleView[]
+  searchLogs         SearchLog[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model ProviderConfig {
+  id         String   @id @default(cuid())
+  userId     String
+  user       User     @relation(fields: [userId], references: [id])
+  provider   String // "openai" | "anthropic" | "claude-cli" | "codex-cli"
+  apiKeyEnc  String? // AES-256-GCM encrypted, see lib/crypto.ts (ticket 4)
+  model      String?
+  cliPath    String?
+  isActive   Boolean  @default(false)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@unique([userId, provider])
+}
+
+// ---------------------------------------------------------------------------
+// Highlights / annotations / chat
+// ---------------------------------------------------------------------------
+
+model Highlight {
+  id             String  @id @default(cuid())
+  articleId      String
+  article        Article @relation(fields: [articleId], references: [id])
+  userId         String
+  user           User    @relation(fields: [userId], references: [id])
+  quote          String  @db.Text
+  // User's own free-text annotation on this highlight, distinct from `quote`
+  // (the anchored source text used for re-anchoring — see lib/annotation/anchor.ts).
+  // Edited directly in the sidebar's Notion-style expanded note block
+  // (ticket 8). Nullable: most highlights never get an explicit note, in
+  // which case the sidebar falls back to displaying `quote` itself.
+  note           String? @db.Text
+  prefixContext  String  @db.Text
+  suffixContext  String  @db.Text
+  startOffset    Int
+  endOffset      Int
+  orphaned       Boolean @default(false)
+  createdAt      DateTime @default(now())
+
+  conversation Conversation?
+
+  @@index([articleId])
+  @@index([userId])
+}
+
+model Conversation {
+  id          String   @id @default(cuid())
+  userId      String
+  user        User     @relation(fields: [userId], references: [id])
+  articleId   String?
+  article     Article? @relation(fields: [articleId], references: [id])
+  highlightId String?  @unique
+  highlight   Highlight? @relation(fields: [highlightId], references: [id])
+  type        String   @default("chat") // "chat" | "summary"
+  title       String?
+  isPinned    Boolean  @default(false)
+  provider    String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  messages Message[]
+
+  @@index([userId])
+  @@index([articleId])
+}
+
+model Message {
+  id             String       @id @default(cuid())
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id])
+  role           String // "user" | "assistant" | "system"
+  content        String       @db.Text
+  createdAt      DateTime     @default(now())
+
+  @@index([conversationId])
+}
+
+// ---------------------------------------------------------------------------
+// Roles / tests / certificates
+// ---------------------------------------------------------------------------
+
+model Role {
+  id    String @id // "STAFF", "PRINCIPAL", "CHIEF", "PLATFORM", "ENTERPRISE", "CLOUD", "GENAI", "MLOPS"
+  label String
+
+  tests Test[]
+}
+
+model Test {
+  id            String @id @default(cuid())
+  roleId        String
+  role          Role   @relation(fields: [roleId], references: [id])
+  mode          String // "graded" | "self-assessed"
+  questionCount Int    @default(20)
+  passThreshold Int    @default(70)
+  createdAt     DateTime @default(now())
+
+  attempts TestAttempt[]
+}
+
+model TestQuestionPool {
+  id        String  @id @default(cuid())
+  articleId String
+  article   Article @relation(fields: [articleId], references: [id])
+  roleId    String // eligibility mapping (which role this article's questions count toward)
+
+  @@index([articleId])
+  @@index([roleId])
+}
+
+model TestAttempt {
+  id          String    @id @default(cuid())
+  testId      String
+  test        Test      @relation(fields: [testId], references: [id])
+  userId      String
+  user        User      @relation(fields: [userId], references: [id])
+  startedAt   DateTime  @default(now())
+  completedAt DateTime?
+  score       Float?
+  passed      Boolean?
+
+  answers     TestAttemptAnswer[]
+  certificate Certificate?
+
+  @@index([testId])
+  @@index([userId])
+}
+
+model TestAttemptAnswer {
+  id                  String            @id @default(cuid())
+  attemptId           String
+  attempt             TestAttempt       @relation(fields: [attemptId], references: [id])
+  interviewQuestionId String
+  interviewQuestion   InterviewQuestion @relation(fields: [interviewQuestionId], references: [id])
+  userAnswer          String            @db.Text
+  score               Int?
+  verdict             String?
+  selfRating          Int?
+  llmFeedback         String?           @db.Text
+  gradedByProvider    String?
+
+  @@index([attemptId])
+}
+
+model Certificate {
+  id               String   @id @default(cuid())
+  attemptId        String   @unique
+  attempt          TestAttempt @relation(fields: [attemptId], references: [id])
+  userId           String
+  user             User     @relation(fields: [userId], references: [id])
+  roleId           String
+  score            Float
+  issuedAt         DateTime @default(now())
+  verificationHash String
+  pdfPath          String
+  socialCardPath   String
+
+  @@index([userId])
+}
+
+// ---------------------------------------------------------------------------
+// Bookmarks / SRS
+// ---------------------------------------------------------------------------
+
+model Bookmark {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id])
+  createdAt DateTime @default(now())
+
+  @@unique([userId, articleId])
+}
+
+model SrsState {
+  id                  String            @id @default(cuid())
+  userId              String
+  user                User              @relation(fields: [userId], references: [id])
+  interviewQuestionId String
+  interviewQuestion   InterviewQuestion @relation(fields: [interviewQuestionId], references: [id])
+  easeFactor          Float             @default(2.5)
+  intervalDays        Int               @default(0)
+  repetitions         Int               @default(0)
+  dueAt               DateTime          @default(now())
+
+  @@unique([userId, interviewQuestionId])
+}
+
+// ---------------------------------------------------------------------------
+// Onboarding / role metadata / news / feature flags (delta section)
+// ---------------------------------------------------------------------------
+
+model RoleMeta {
+  roleId               String @id // "STAFF", "CHIEF", ...
+  shortDescription     String // one-liner shown on the onboarding card
+  tier                 String // "executive" | "core" | "emerging-specialist"
+  indicativeRateMinUsd Int
+  indicativeRateMaxUsd Int
+  rateDisclaimer       String @default("Illustrative placeholder, not verified market data.")
+}
+
+model UserRoleSelection {
+  id     String @id @default(cuid())
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+  roleId String
+
+  @@unique([userId, roleId])
+}
+
+model NewsItem {
+  id          String   @id @default(cuid())
+  domainId    String
+  domain      Domain   @relation(fields: [domainId], references: [id])
+  title       String
+  url         String
+  source      String
+  publishedAt DateTime
+  fetchedAt   DateTime @default(now())
+  summary     String?  @db.Text
+
+  @@index([domainId])
+}
+
+// ---------------------------------------------------------------------------
+// Behavioral signals for the home dashboard's "next best article" (fast
+// follow to ticket 12/14) — lightweight logs, not full analytics. See
+// app/page.tsx / lib/recommendation.ts for how these are blended.
+// ---------------------------------------------------------------------------
+
+model ArticleView {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  articleId String
+  article   Article  @relation(fields: [articleId], references: [id])
+  viewedAt  DateTime @default(now())
+
+  @@index([userId, articleId])
+  @@index([userId, viewedAt])
+}
+
+model SearchLog {
+  id        String   @id @default(cuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
+  query     String
+  createdAt DateTime @default(now())
+
+  @@index([userId, createdAt])
+}
+
+model FeatureFlags {
+  id                String   @id @default(cuid()) // singleton row (userId or "global")
+  userId            String?  @unique
+  user              User?    @relation(fields: [userId], references: [id])
+  newsEnabledGlobal Boolean  @default(false)
+  newsEnabledRoles  String[] @default([])
+  pwaEnabled        Boolean  @default(true)
+}

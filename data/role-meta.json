@@ -1,0 +1,69 @@
+{
+  "rateDisclaimer": "Richtwerte, keine verifizierten Marktdaten — bitte für deinen Markt anpassen.",
+  "roles": [
+    {
+      "roleId": "CHIEF",
+      "label": "Chief Architect",
+      "shortDescription": "Sets architecture strategy and technology direction for the whole organization and is accountable to executive leadership for its long-term technical health.",
+      "tier": "executive",
+      "indicativeRateMinUsd": 180,
+      "indicativeRateMaxUsd": 300
+    },
+    {
+      "roleId": "STAFF",
+      "label": "Staff Engineer",
+      "shortDescription": "Drives technical direction across multiple teams, resolves the hardest cross-cutting engineering problems, and multiplies other engineers' effectiveness.",
+      "tier": "core",
+      "indicativeRateMinUsd": 90,
+      "indicativeRateMaxUsd": 160
+    },
+    {
+      "roleId": "PRINCIPAL",
+      "label": "Principal Architect",
+      "shortDescription": "Owns architecture decisions for a major product area or platform, balancing technical depth with organizational influence.",
+      "tier": "core",
+      "indicativeRateMinUsd": 120,
+      "indicativeRateMaxUsd": 200
+    },
+    {
+      "roleId": "ENTERPRISE",
+      "label": "Enterprise Architect",
+      "shortDescription": "Aligns technology investments, systems, and standards across business units so the organization's IT landscape stays coherent and governable.",
+      "tier": "core",
+      "indicativeRateMinUsd": 110,
+      "indicativeRateMaxUsd": 180
+    },
+    {
+      "roleId": "CLOUD",
+      "label": "Cloud Architect",
+      "shortDescription": "Designs and governs an organization's cloud landing zones, workload architecture, and cost/security posture across one or more cloud providers.",
+      "tier": "core",
+      "indicativeRateMinUsd": 100,
+      "indicativeRateMaxUsd": 175
+    },
+    {
+      "roleId": "PLATFORM",
+      "label": "Platform Architect",
+      "shortDescription": "Builds the internal platforms, golden paths, and developer tooling that let product teams ship reliably without reinventing infrastructure.",
+      "tier": "core",
+      "indicativeRateMinUsd": 100,
+      "indicativeRateMaxUsd": 170
+    },
+    {
+      "roleId": "GENAI",
+      "label": "GenAI Architect",
+      "shortDescription": "Designs production-grade LLM/agent systems — retrieval, orchestration, evaluation, and guardrails — bridging fast-moving AI research and real product constraints.",
+      "tier": "emerging-specialist",
+      "indicativeRateMinUsd": 130,
+      "indicativeRateMaxUsd": 220
+    },
+    {
+      "roleId": "MLOPS",
+      "label": "MLOps Architect",
+      "shortDescription": "Builds the pipelines, infrastructure, and operational practices that take machine learning models from experiment to reliable, monitored production systems.",
+      "tier": "emerging-specialist",
+      "indicativeRateMinUsd": 110,
+      "indicativeRateMaxUsd": 190
+    }
+  ]
+}

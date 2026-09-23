@@ -1,0 +1,254 @@
+{
+  "schema_version": "1.0",
+  "article_count": 720,
+  "domains": [
+    {
+      "id": "00",
+      "slug": "navigation-governance",
+      "source_title": "Navigation, competency model & dependency graph",
+      "count": 10,
+      "wave": 0,
+      "editorial_boundary": "Die Navigation verbindet Nachweise und Lernziele, ohne bereits erreichte Kompetenz zu unterstellen."
+    },
+    {
+      "id": "01",
+      "slug": "target-roles",
+      "source_title": "Target roles & career architecture",
+      "count": 20,
+      "wave": 1,
+      "editorial_boundary": "Projektbelege und Kompetenzziele bleiben getrennt; Titel allein ersetzen keine nachgewiesene Entscheidungsverantwortung."
+    },
+    {
+      "id": "02",
+      "slug": "linux-systems",
+      "source_title": "Computer systems, Linux & OS foundations",
+      "count": 18,
+      "wave": 1,
+      "editorial_boundary": "Die Anschlusswirkung auf Container und Anwendungsprozesse steht im Vordergrund, keine Kernel-Entwicklerausbildung."
+    },
+    {
+      "id": "03",
+      "slug": "network-foundations",
+      "source_title": "Networking foundations & protocols",
+      "count": 28,
+      "wave": 2,
+      "editorial_boundary": "Paketmechanismen werden am Host erklärt; unternehmensweite Routing-Policy bleibt im Enterprise-Networking-Track."
+    },
+    {
+      "id": "04",
+      "slug": "enterprise-networking",
+      "source_title": "Enterprise networking, SDN & network automation",
+      "count": 24,
+      "wave": 2,
+      "editorial_boundary": "Der Schwerpunkt ist der überprüfbare Betrieb unternehmensweiter Netze; allgemeine Paketgrundlagen werden nur referenziert."
+    },
+    {
+      "id": "05",
+      "slug": "distributed-systems",
+      "source_title": "Distributed systems & system design",
+      "count": 28,
+      "wave": 1,
+      "editorial_boundary": "Die Mechanismen werden produktunabhängig hergeleitet; konkrete Broker, Datenbanken und Cloud-Dienste erhalten eigene technische Artikel."
+    },
+    {
+      "id": "06",
+      "slug": "software-architecture",
+      "source_title": "Software architecture, DDD & architecture patterns",
+      "count": 24,
+      "wave": 1,
+      "editorial_boundary": "Entwurfsgrenzen und Änderungsfolgen sind kanonisch hier; konkrete Laufzeitprodukte und Organisationsprogramme werden nur angeschlossen."
+    },
+    {
+      "id": "07",
+      "slug": "backend-integration",
+      "source_title": "Backend, APIs & enterprise integration",
+      "count": 24,
+      "wave": 2,
+      "editorial_boundary": "Die Perspektive ist die konkrete Schnittstellenimplementierung; verteilte Grundgarantien und organisationsweite Governance werden referenziert."
+    },
+    {
+      "id": "08",
+      "slug": "messaging-workflows",
+      "source_title": "Messaging, event-driven systems & durable workflows",
+      "count": 18,
+      "wave": 2,
+      "editorial_boundary": "Brokermechanik und Prozessfortschritt sind kanonisch hier; Data Products und Geschäftsdomänen nutzen diese Garantien über Querverweise."
+    },
+    {
+      "id": "09",
+      "slug": "databases-storage",
+      "source_title": "Databases, storage, search & caching",
+      "count": 24,
+      "wave": 2,
+      "editorial_boundary": "Speichermechanik und Datenhaltung sind kanonisch hier; Retrieval-Pipelines und Kubernetes-Orchestrierung werden in ihren eigenen Domains vertieft."
+    },
+    {
+      "id": "10",
+      "slug": "data-platforms",
+      "source_title": "Data engineering & enterprise data platforms",
+      "count": 22,
+      "wave": 7,
+      "editorial_boundary": "Datenprodukte und Verarbeitungspipelines stehen im Mittelpunkt; Broker- und Datenbankinternas werden über kanonische Artikel angeschlossen."
+    },
+    {
+      "id": "11",
+      "slug": "genai-architecture",
+      "source_title": "GenAI / LLM solution architecture",
+      "count": 34,
+      "wave": 3,
+      "editorial_boundary": "Der Fokus ist die vollständige AI-Anwendung; Agentenorchestrierung, Retrievalmechanik und Serving-Kernel bleiben eigenen Domains zugeordnet."
+    },
+    {
+      "id": "12",
+      "slug": "agentic-ai",
+      "source_title": "Agentic AI & autonomous systems",
+      "count": 30,
+      "wave": 3,
+      "editorial_boundary": "Deterministische Zustände begrenzen probabilistische Auswahl; Aktionen benötigen minimale Autorität und nachvollziehbare Recovery-Grenzen im Enterprise-Einsatz."
+    },
+    {
+      "id": "13",
+      "slug": "retrieval-memory",
+      "source_title": "RAG, retrieval, knowledge & memory",
+      "count": 26,
+      "wave": 3,
+      "editorial_boundary": "Wissenszugriff und Gedächtnisqualität sind kanonisch hier; Indexinternas, allgemeine Agentensteuerung und Compliance werden über Querverweise verbunden."
+    },
+    {
+      "id": "14",
+      "slug": "ml-engineering",
+      "source_title": "ML engineering",
+      "count": 20,
+      "wave": 6,
+      "editorial_boundary": "Mathematische und experimentelle Grundlagen werden für Modellentscheidungen erklärt; große Forschungstrainings bleiben optionale Vertiefung ohne behauptete Produktionserfahrung."
+    },
+    {
+      "id": "15",
+      "slug": "mlops-evaluation",
+      "source_title": "MLOps, LLMOps & AI evaluation",
+      "count": 28,
+      "wave": 6,
+      "editorial_boundary": "Lebenszyklus und Qualitätsnachweise sind kanonisch hier; Modellmathematik, Serving-Kernel und allgemeiner SRE-Betrieb werden nur angebunden."
+    },
+    {
+      "id": "16",
+      "slug": "kubernetes-platform",
+      "source_title": "Kubernetes, containers & platform engineering",
+      "count": 34,
+      "wave": 4,
+      "editorial_boundary": "Cluster- und Plattformmechanik sind kanonisch hier; allgemeine Linux-, Speicher-, GitOps- und IAM-Grundlagen werden gezielt referenziert."
+    },
+    {
+      "id": "17",
+      "slug": "gpu-inference",
+      "source_title": "GPU systems, AI infrastructure & inference serving",
+      "count": 28,
+      "wave": 6,
+      "editorial_boundary": "Hardware- und Servingmechanik sind kanonisch hier; ökonomische Portfoliobewertung und allgemeine Modellgrundlagen werden in den jeweiligen Domains vertieft."
+    },
+    {
+      "id": "18",
+      "slug": "cloud-foundations",
+      "source_title": "Cloud architecture foundations, hybrid & multi-cloud",
+      "count": 22,
+      "wave": 4,
+      "editorial_boundary": "Providerübergreifende Architekturentscheidungen sind kanonisch hier; konkrete Servicekonfigurationen werden in den getrennten AWS-, Azure- und GCP-Tracks behandelt."
+    },
+    {
+      "id": "19",
+      "slug": "aws",
+      "source_title": "AWS architecture",
+      "count": 18,
+      "wave": 4,
+      "editorial_boundary": "AWS-Serviceentscheidungen und Integrationsgrenzen werden konkretisiert; Protokoll-, Datenbank- und Messagingmechanik bleiben in ihren kanonischen Fachartikeln."
+    },
+    {
+      "id": "20",
+      "slug": "azure",
+      "source_title": "Microsoft Azure architecture",
+      "count": 18,
+      "wave": 4,
+      "editorial_boundary": "Die Perspektive ist Azure-Tenant- und Lösungsdesign; Entra-Protokolle, Datenplattforminternas und Brokersemantik werden in den kanonischen Domains vertieft."
+    },
+    {
+      "id": "21",
+      "slug": "gcp-multicloud",
+      "source_title": "GCP & multi-cloud architecture",
+      "count": 14,
+      "wave": 4,
+      "editorial_boundary": "GCP-Ressourcen und konkrete Cloudübergänge stehen im Mittelpunkt; generische Multi-Cloud-Muster und Protokollgrundlagen werden gezielt referenziert."
+    },
+    {
+      "id": "22",
+      "slug": "devops-supply-chain",
+      "source_title": "DevOps, IaC, GitOps & software supply chain",
+      "count": 24,
+      "wave": 5,
+      "editorial_boundary": "Delivery-Mechanik und Artefaktvertrauen sind kanonisch hier; Clusterkonfiguration und übergreifende Sicherheitsgovernance werden durch klar benannte Querverweise angeschlossen."
+    },
+    {
+      "id": "23",
+      "slug": "security-identity",
+      "source_title": "Security, IAM, Zero Trust & cloud security",
+      "count": 28,
+      "wave": 5,
+      "editorial_boundary": "Identitätsprotokolle und Sicherheitsmechanismen sind kanonisch hier; AI-Angriffsflächen, Lieferkettenimplementierung und regulatorische Pflichten erhalten abgegrenzte Querverweise."
+    },
+    {
+      "id": "24",
+      "slug": "observability-sre",
+      "source_title": "Observability, SRE, resilience & disaster recovery",
+      "count": 24,
+      "wave": 5,
+      "editorial_boundary": "Zuverlässigkeit und betriebliche Nachweise sind kanonisch hier; Sicherheitsforensik, Datenbankinternas und einzelne AI-Instrumentierungswerkzeuge werden über Querverweise verbunden."
+    },
+    {
+      "id": "25",
+      "slug": "enterprise-architecture",
+      "source_title": "Enterprise Architecture, ITSM, CMDB & governance",
+      "count": 28,
+      "wave": 5,
+      "editorial_boundary": "Formale Modelle und Governance-Mechanismen sind kanonisch hier; strategische Führung und Fallarbeit in Domain 30 wenden diese Instrumente an."
+    },
+    {
+      "id": "26",
+      "slug": "ai-governance",
+      "source_title": "AI governance, compliance, privacy & regulatory architecture",
+      "count": 18,
+      "wave": 5,
+      "editorial_boundary": "Die Artikel planen technische und organisatorische Umsetzung anhand aktueller Primärquellen; Rechtsanwendung und versionsabhängige Pflichten müssen später gesondert verifiziert werden."
+    },
+    {
+      "id": "27",
+      "slug": "finops-economics",
+      "source_title": "FinOps, capacity, performance & architecture economics",
+      "count": 14,
+      "wave": 5,
+      "editorial_boundary": "Quantitative Entscheidungsmodelle und Kostenmechanismen sind kanonisch hier; strategische Portfoliowahl und produktabhängige Abrechnung werden in ihren Anwendungsartikeln genutzt."
+    },
+    {
+      "id": "28",
+      "slug": "iot-edge",
+      "source_title": "IoT, edge, Smart Building & physical-system integration",
+      "count": 14,
+      "wave": 7,
+      "editorial_boundary": "Geräte-, Gebäude- und Edgeintegration werden vertieft; Konzeptwissen und elektrotechnische Praxis bleiben von noch nachzuweisender Protokoll- oder Produktbetriebserfahrung getrennt."
+    },
+    {
+      "id": "29",
+      "slug": "commerce-integration",
+      "source_title": "Commerce, ERP, WMS & business-system integration",
+      "count": 14,
+      "wave": 7,
+      "editorial_boundary": "Geschäftsinvarianten und konkrete Commerce-Integrationsgrenzen werden vertieft; generische API-, Messaging- und Konsistenzmechanismen werden über ihre Hauptartikel angeschlossen."
+    },
+    {
+      "id": "30",
+      "slug": "architect-practice",
+      "source_title": "Staff / Principal / Chief Architect practice, cases & interviews",
+      "count": 44,
+      "wave": 8,
+      "editorial_boundary": "Anwendungsfälle und Führungspraxis synthetisieren die kanonischen Fachartikel. Formale Zielrollen sind Lernziele; belastbare Portfolioevidenz muss tatsächliche Verantwortung und Wirkung belegen."
+    }
+  ]
+}

@@ -1,0 +1,21 @@
+[package]
+name = "keystone"
+version = "0.1.0"
+description = "Keystone — native desktop shell for the self-hosted Keystone knowledge platform"
+authors = ["Keystone"]
+license = "PolyForm-Noncommercial-1.0.0"
+edition = "2021"
+rust-version = "1.77"
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+tauri = { version = "2", features = ["tray-icon"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+# Blocking HTTP client for the readiness poll — deliberately not `reqwest`:
+# the health check is a handful of sequential GETs on a background thread,
+# so a lightweight sync client avoids pulling in a second async runtime
+# alongside Tauri's own tokio runtime.
+ureq = "2"
